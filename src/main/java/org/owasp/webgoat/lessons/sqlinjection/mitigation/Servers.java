@@ -66,6 +66,11 @@ public class Servers {
   @ResponseBody
   public List<Server> sort(@RequestParam String column) throws Exception {
     List<Server> servers = new ArrayList<>();
+    // TODO: Fill whitelist of allowed column names
+    Set<String> allowedColumns = Set.of("id", "hostname", "ip", "mac", "status", "description");
+    if (!allowedColumns.contains(column)) {
+        throw new IllegalArgumentException("Invalid column name");
+    }
 
     try (var connection = dataSource.getConnection()) {
       try (var statement =
